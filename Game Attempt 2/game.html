@@ -1,0 +1,68 @@
+<title>game attempt 2</title>
+<canvas id="canvas" height="500" width="600"></canvas>
+    
+<script>
+    
+/////variables/////
+    var gameArea; // the game canvas
+    var gameObject; // the game object
+    var gamePlayer; // the game playable character
+    
+    //player
+    var posX = 80; //the player x coordinate
+    var speedX = 2; //the value that will be added to player x coordinate
+    var posY = 80; //the player y coordinate
+    var speedY = 2; //the value that will be added to player y coordinate
+    
+/////defining variables/////
+    gameArea = document.getElementById("canvas").getContext("2d"); //gets canvas element from HTML
+    
+    //player
+    gamePlayer = gameArea.fillStyle = "blue"; //specifies that the player's color will be blue
+    gamePlayer = gameArea; //specifies the player's position and size in the canvas
+    
+/////functions/////
+    //player
+    function moveX() { //moves the player's x coordinate
+        posX += speedX; //adds speedX to posX
+        console.log("added SpeedX:",speedX,"to PosX:",posX); //displays the sum in the console log
+    }
+    function moveY() { //moves the player's y coordinate
+        posY += speedY; //adds speedY to posY
+        console.log("added SpeedY:",speedY,"to PosY:",posY); //displays the sum in the console log
+    }
+    
+    function clearArea() { //clears the canvas
+        gameArea.clearRect(0,0,600,500); //clears the canvas' resolution starting at x 0 and y 0
+        gamePlayer.fillRect(posX,posY,30,30); //draws the player 
+    }
+    function moveXY() { //moves the player's and object's x and y coordinates
+        moveX(); //moves player's x coordinate
+        moveY(); //moves player's y coordinate
+        
+/////if statements/////
+        //player
+        if (posY == 470 || posY == 0) { //runs code if y coordinates of player is = to 500 - player size OR y coordinates of player is = to 0
+            console.log("Boing!"); //displays text in the console log
+            speedY = -speedY; //turns the SpeedY vaiable into a negative number when the player 'bounces' off the edge
+    }
+        if (posX == 570 || posX == 0) { //runs code if x coordinates of player is = to 600 - player size OR x coordinates of player is = to 0
+            console.log("Boing!"); //displays text in the console log
+            speedX = -speedX; //turns the SpeedX vaiable into a negative number when the player 'bounces' off the edge
+    }
+    }
+    
+/////intervals/////
+    setInterval(clearArea,0); //sets an interval to execute clearArea every 30ms
+    setInterval(moveXY,20); //sets an interval to execute moveXY every 30ms
+    
+</script>
+    
+<style>
+    #canvas {
+        background-color: #e7e7e7;
+        border: 1px solid #d7d7d7;
+        border-radius: 2px;
+        image-rendering: pixelated;
+    }
+</style>

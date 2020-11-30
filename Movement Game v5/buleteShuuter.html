@@ -1,0 +1,474 @@
+<html>
+<title>Run and Jump!</title>
+<center><canvas id="canvas" height="600" width="1100"></canvas><br><button id='button1' onclick="moveL()">L</button><button id='button1' onclick="jump()">U</button><button id='button1' onclick="moveR()">R</button><br><button id='button2' onclick="shoot()">shuut</button></center><audio id="jump" src="jump.wav"></audio><audio id="shoot" src="shuute.wav"></audio><audio id="boom" src="enemyDead.wav"></audio><audio id="point" src="point.wav"></audio><audio id="spawn" src="spawn.wav"></audio><audio id="death" src="death.wav"></audio>
+
+<script>
+var gameArea = document.getElementById("canvas");
+var ctx = gameArea.getContext("2d");
+var HEIGHT = 600;
+var WIDTH = 1100;
+var score = 0;
+var scoreAdd = 1;
+
+function addScore() {
+if(dead == false) {
+    score += scoreAdd;
+    }
+}
+
+    var cubeH = 50;
+    var cubeW = 50;
+
+    var floor = HEIGHT - cubeH;
+
+    var posX = WIDTH / 2 - cubeW / 2;
+    var posY = floor;
+    var speedX = 0;
+    var speedY = 0;
+    var gravX = 0;
+    var gravY = 0;
+    var Color = "#9f6ee0";
+    
+    var jumping;
+    var keyR;
+    var keyL;
+    var keyU;
+    
+    var dead = false;
+
+function isJumping() {
+    if(posY < floor) {
+        jumping = true;
+    } else { jumping = false }
+}
+
+function addY() {
+    posY += speedY;
+    
+    if(posY >= floor) {
+        speedY = 0;
+        gravY = 0;
+        posY = floor;
+    }
+}
+function addX() {
+if(dead == false) {
+    posX += speedX;
+    
+    if(posX >= WIDTH - cubeW) {
+        posX = WIDTH - cubeW;
+    }
+    if(posX <= 0) {
+        posX = 0;
+    }
+    }
+}
+
+function addGravY() {
+    speedY += gravY;
+}
+function addGravX() {
+    speedX += gravX;
+}
+
+function jump() {
+if(dead == false) {
+    if(jumping == false) {
+    document.getElementById('jump').load();
+    document.getElementById('jump').play();
+    keyU = true;
+    keyR = false;
+    keyL = false;
+    posY += 1;
+    speedY = -23;
+    gravY = 0.3;
+    console.log("jumping is false");
+    } else {console.log("jumping is true")}
+}
+}
+
+function moveR() {
+    keyR = true;
+    keyL = false;
+    //keyU = false;
+    speedX = 1;
+}
+function moveL() {
+    keyL = true;
+    keyR = false;
+    //keyU = false;
+    speedX = -1;
+}
+
+function playerUpdate() {
+    ctx.fillStyle = Color;
+    ctx.fillRect(posX,posY,cubeW,cubeH);
+}
+
+setInterval(addGravY,3);
+setInterval(addGravX,3);
+setInterval(addY,14);
+setInterval(addX,0);
+setInterval(isJumping,0);
+setInterval(addScore,70);
+
+window.addEventListener("keydown",ControlD);
+window.addEventListener("keyup",ControlU);
+
+bullet = {
+    posX: null,
+    posY: null,
+    cubeW: 0,
+    cubeH: 0,
+    speedX: 0,
+    speedY: 0,
+    Color: "#9afdff",
+}
+
+function bulletAddX() {
+    if(shot == true) {
+    bullet.posX += bullet.speedX;}
+    
+    if(bullet.posX >= WIDTH - bullet.cubeW || bullet.posX <= 0) {
+    bullet.posX = null;
+    bullet.posY = null;
+    bullet.cubeW = 0;
+    bullet.cubeH = 0;
+    bullet.speedX = 0;
+    bullet.speedY = 0;
+    }
+}
+
+function bulletAddY() {
+    if(shot == true) {
+    bullet.posY += bullet.speedY;}
+    
+    if(bullet.posY >= HEIGHT - bullet.cubeH || bullet.posY <= 0) {
+    bullet.posX = null;
+    bullet.posY = null;
+    bullet.cubeW = 0;
+    bullet.cubeH = 0;
+    bullet.speedX = 0;
+    bullet.speedY = 0;
+    }
+}
+
+function bulletUpdate() {
+    ctx.fillStyle = bullet.Color;
+    ctx.fillRect(bullet.posX,bullet.posY,bullet.cubeW,bullet.cubeH);
+}
+
+var shot;
+
+function isShot() {
+    if(bullet.posX != null || bullet.posY != null) {
+        shot = true;
+    } else { shot = false;
+    }
+}
+
+function shoot() {
+if(dead == false) {
+    if(shot == false && keyR == true) {
+        document.getElementById('shoot').load();
+        document.getElementById('shoot').play();
+        bullet.cubeW = 20;
+        bullet.cubeH = 10;
+        bullet.posX = posX + cubeW;
+        bullet.posY = posY;
+        bullet.speedX = 5;
+        bullet.speedY = 0;
+    } else if(shot == false && keyL == true) {
+        document.getElementById('shoot').load();
+        document.getElementById('shoot').play();
+        bullet.cubeW = 20;
+        bullet.cubeH = 10;
+        bullet.posX = posX - cubeW;
+        bullet.posY = posY;
+        bullet.speedX = -5;
+        bullet.speedY = 0;
+    } else if(shot == false && keyU == true) {
+        document.getElementById('shoot').load();
+        document.getElementById('shoot').play();
+        bullet.cubeW = 10;
+        bullet.cubeH = 20;
+        bullet.posX = posX + cubeW / 2 - bullet.cubeW / 2;
+        bullet.posY = posY - cubeH;
+        bullet.speedX = 0;
+        bullet.speedY = -5;
+    }
+    }
+}
+
+setInterval(isShot,0);
+setInterval(bulletAddX,0);
+setInterval(bulletAddY,0);
+
+function ControlD(key) {
+    //move
+    if(key.keyCode == "87") {
+        jump();
+    } else if(key.keyCode == "68") {
+        moveR();
+    } else if(key.keyCode == "65") {
+        moveL();
+    } else if(key.keyCode == "83") {
+        if(dead == false) {
+        gravY *= 3;
+        }
+    }
+    //shuute bulette
+    if(key.keyCode == "76") {
+        shoot();
+    } 
+}
+function ControlU(key) {
+    if(key.keyCode == "68") {
+        speedX = 0;
+    } else if(key.keyCode == "65") {
+        speedX = 0;
+    }
+}
+
+
+//enemy
+var allDead = true;
+
+enemy = {
+    posX: undefined,
+    posY: undefined,
+    cubeW: undefined,
+    cubeH: undefined,
+    speedX: undefined,
+    speedY: undefined,
+    Color: "#c94a4a",
+    spawnPosX: 150,
+    spawnPosY: 100,
+}
+enemy2 = {
+    posX: undefined,
+    posY: undefined,
+    cubeW: undefined,
+    cubeH: undefined,
+    speedX: undefined,
+    speedY: undefined,
+    Color: "#c94a4a",
+    spawnPosX: WIDTH -150,
+    spawnPosY: 100,
+}
+enemy3 = {
+    posX: undefined,
+    posY: undefined,
+    cubeW: undefined,
+    cubeH: undefined,
+    speedX: undefined,
+    speedY: undefined,
+    Color: "#c94a4a",
+    spawnPosX: 150,
+    spawnPosY: HEIGHT - 100,
+}
+enemy4 = {
+    posX: undefined,
+    posY: undefined,
+    cubeW: undefined,
+    cubeH: undefined,
+    speedX: undefined,
+    speedY: undefined,
+    Color: "#c94a4a",
+    spawnPosX: WIDTH - 150,
+    spawnPosY: HEIGHT - 100,
+}
+enemy5 = {
+    posX: undefined,
+    posY: undefined,
+    cubeW: undefined,
+    cubeH: undefined,
+    speedX: undefined,
+    speedY: undefined,
+    Color: "#c94a4a",
+    spawnPosX: WIDTH / 2,
+    spawnPosY: 100,
+}
+
+
+function enemyAdd(something) {
+if(allDead == false) {
+    if(something.posX < posX) {
+        something.speedX = 1;
+    }
+    if(something.posY < posY) {
+        something.speedY = 1;
+    }
+    if(something.posX > posX) {
+        something.speedX = -1;
+    }
+    if(something.posY > posY) {
+        something.speedY = -1;
+    }
+    something.posX += something.speedX;
+    something.posY += something.speedY;
+    }
+    //bullet
+    
+    if(bullet.posX + bullet.cubeW >= something.posX && bullet.posX <= something.posX + something.cubeW && bullet.posY >= something.posY - something.cubeH && bullet.posY <= something.posY + something.cubeH) {
+        document.getElementById('boom').load();
+        document.getElementById('point').load();
+        document.getElementById('boom').play();
+        document.getElementById('point').play();
+        score = score + 100;
+        bullet.posX = -50;
+        bullet.poxY = -50;
+        something.posX = undefined;
+        something.posY = undefined;
+        something.cubeW = undefined;
+        something.cubeH = undefined;
+    }
+    
+    //player
+    
+    if(dead == false) {
+    if(posX >= something.posX - cubeW && posX <= something.posX + something.cubeW && posY >= something.posY - cubeH && posY <= something.posY + cubeH) {
+        document.getElementById('death').play();
+        dead = true;
+    }
+    }
+    
+}
+
+
+function spawnEnemy(something) {
+    document.getElementById('spawn').play();
+    something.cubeH = 55;
+    something.cubeW = 55;
+    something.posX = something.spawnPosX;
+    something.posY = something.spawnPosY;
+    something.speedX = 0;
+    something.speedY = 0;
+}
+
+function checkAllDead() {
+if (enemy.posX == undefined && enemy2.posX == undefined && enemy3.posX == undefined && enemy4.posX == undefined && enemy5.posX == undefined) {
+   allDead = true;
+} else { 
+    allDead = false; 
+}
+if (enemy.cubeW == undefined && enemy2.cubeW == undefined && enemy3.cubeW == undefined && enemy4.cubeW == undefined && enemy5.cubeW == undefined) {
+   allDead = true;
+} else { 
+    allDead = false; 
+}
+console.log(allDead);
+}
+
+function spawnAllEnemy() {
+if(allDead == true) {
+spawnEnemy(enemy);
+spawnEnemy(enemy2);
+spawnEnemy(enemy3);
+spawnEnemy(enemy4);
+spawnEnemy(enemy5);
+console.log("bruh");
+}
+}
+
+function allEnemyAdd() {
+enemyAdd(enemy);
+enemyAdd(enemy2);
+enemyAdd(enemy3);
+enemyAdd(enemy4);
+enemyAdd(enemy5);
+}
+
+function enemyUpdate(something) {
+    ctx.fillStyle = something.Color;
+    ctx.fillRect(something.posX,something.posY,something.cubeW,something.cubeH);
+}
+
+function allEnemyUpdate() {
+enemyUpdate(enemy);
+enemyUpdate(enemy2);
+enemyUpdate(enemy3);
+enemyUpdate(enemy4);
+enemyUpdate(enemy5);
+}
+
+
+
+function update() {
+    
+    ctx.clearRect(0,0,WIDTH,HEIGHT);
+    checkAllDead();
+    playerUpdate();
+    allEnemyUpdate();
+    bulletUpdate();
+    ctx.font = "14px consolas";
+    ctx.fillStyle = "white";
+    ctx.fillText("move with WASD. shoot with L", WIDTH - 230, 0 + 20);
+    ctx.fillText("score: " + score,20, 0 + 20);
+    if(dead == true) {
+        ctx.fillStyle = "red";
+        ctx.font = "120px poor richard";
+        ctx.fillText("YOU DIED", WIDTH / 2 - 250, HEIGHT / 2);
+        ctx.font = "20px lucida console";
+        ctx.fillText("With a score of " + score + "!", WIDTH / 2 - 94, HEIGHT / 2 + 60);
+    }
+    
+}
+setTimeout(function() {setInterval(spawnAllEnemy,500)},1000);
+setInterval(allEnemyAdd,9);
+setInterval(update,0);
+
+
+</script>
+
+</html>
+
+<style>
+
+html {
+    background: #3e3e3e;
+    padding: 0;
+    margin: 0;
+}
+
+#canvas {
+    background: #2a2a2a;
+    border: 3px solid #abeee6;
+    border-radius: 4px;
+    image-rendering: pixelated;
+}
+
+#button1 {
+    height: 55px;
+    width: 55px;
+    background: #50418b;
+    border: 2px solid #25175e;
+    border-radius: 3px;
+    transition: 0.2s;
+    font-family: consolas;
+    color: white;
+    font-size: 16px;
+}
+#button1:hover {
+    background: #6955b7;
+    border: 2px solid #9989dc;
+    font-size: 20px;
+}
+
+#button2 {
+    height: 55px;
+    width: 90px;
+    background: #50418b;
+    border: 2px solid #25175e;
+    border-radius: 3px;
+    transition: 0.2s;
+    font-family: consolas;
+    color: white;
+    font-size: 16px;
+}
+#button2:hover {
+    background: #6955b7;
+    border: 2px solid #9989dc;
+    font-size: 18px;
+}
+</style>

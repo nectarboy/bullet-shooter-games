@@ -1,0 +1,16 @@
+html, body {
+    background: #3e3e3e;
+    padding: 0;
+    margin: 0;
+}
+
+* {
+    text-align: center;
+}
+
+.canvas {
+    width: 1100px;
+    border: 1px solid #abeee6;
+    border-radius: 2px;
+    image-rendering: pixelated;
+}

@@ -1,0 +1,35 @@
+{
+    "info": {
+        // standard information
+        "name": "FORMAT",
+        "desc": "an example map demonstrating map JSON format",
+        "author": null
+    },
+    "meta": {
+        "width": 1,
+        "height": 1,
+    },
+    "data": {
+        // chunk number corresponds to 
+        "0": {
+            // Assets
+            "custom_tile_asset": false,
+            "custom_bg_asset": false,
+            "tile_asset": "tile_grass",
+            "bg_asset": "bg_test",
+
+            // 21x20 array containing 8x8 tiles to be displayed
+            "fg": [],
+            // 21x20 array containing 8x8 tiles for collision logic
+            "col": [],
+            // array full of entities to spawn
+            "ent": [
+                {
+                    "type": "Player",
+                    "x": 0,
+                    "y": 0
+                }
+            ]
+        }
+    }
+}

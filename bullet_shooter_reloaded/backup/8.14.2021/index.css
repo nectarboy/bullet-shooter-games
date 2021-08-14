@@ -1,0 +1,7 @@
+/* ------------------------ */
+.canvas {
+    width: 504px;
+
+    border: 1px solid black;
+    image-rendering: pixelated;
+}
